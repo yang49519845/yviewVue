@@ -6,6 +6,7 @@ class ResImpl {
   private _value: any;
   private _rawValue: any;
   public dep: any;
+  public __v_isRef = true;
   constructor(value) {
     // 1. value 是否是对象
     this._rawValue = value;
@@ -38,4 +39,35 @@ export function trackRefValue(ref) {
   if (isTracking()) {
     trackEffect(ref.dep);
   }
+}
+
+// isRef
+export function isRef(ref) {
+  return !!ref.__v_isRef;
+}
+
+export function unRef(ref) {
+  if (isRef(ref)) {
+    return ref.value;
+  } else {
+    return ref;
+  }
+}
+
+// 场景
+// setup(() => { return { ref } })
+// Template  {{ref}}  而不是 {{ref.value}}
+export function proxyRefs(objectWithRefs) {
+  return new Proxy(objectWithRefs, {
+    get(target, key) {
+      return unRef(Reflect.get(target, key));
+    },
+    set(target, key, value) {
+      if (isRef(target[key]) && !isRef(value)) {
+        return (target[key] = value);
+      } else {
+        return Reflect.set(target, key, value);
+      }
+    },
+  });
 }
