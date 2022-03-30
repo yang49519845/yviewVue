@@ -41,11 +41,12 @@ export function trackRefValue(ref) {
   }
 }
 
-// isRef
+/** 判断是否是一个Ref */
 export function isRef(ref) {
   return !!ref.__v_isRef;
 }
 
+/** 直接取Ref值，不需要使用Ref.value */
 export function unRef(ref) {
   if (isRef(ref)) {
     return ref.value;
