@@ -7,10 +7,9 @@ export function render(vnode, container) {
 }
 
 export function patch(vnode, container) {
-
-  // 区分 Components 类型与 Element 类型
-
   // 分析组件，将组件强化后输出
+  // 区分 Components 类型与 Element 类型
+  // processElement()
   processComponent(vnode, container)
 
 
