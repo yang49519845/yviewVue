@@ -16,12 +16,19 @@ export const App = {
       'div', {
         id: 'root',
         class: ['red', 'hard'],
-        onClick: () => console.log('click')
       },
       [
-        h('div', {}, 'hi, ' + this.msg),
+        h('div', {
+          onClick: () => console.log('click'),
+        }, 'hi, ' + this.msg),
         h(Foo, {
-          count: 1
+          count: 1,
+          onAdd(a, b) {
+            console.log('add', a, b)
+          },
+          onAddFoo(a, b) {
+            console.log('addFoo', a, b)
+          }
         })
       ]
       // 'hello, ' + this.msg
