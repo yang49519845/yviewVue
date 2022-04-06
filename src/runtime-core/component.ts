@@ -2,6 +2,7 @@ export function createComponentInstance(vnode) {
 
   const component = {
     vnode,
+    type: vnode.type
   }
 
   return component;
@@ -46,5 +47,6 @@ function handleSetupResult(instance: any, setupResult: any) {
 function finishComponentSetup(instance: any) {
   const Component = instance.type;
   // TODO: 1.0.0 必须写Render
+
   instance.render = Component.render
 }
