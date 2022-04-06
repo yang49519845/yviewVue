@@ -1,5 +1,4 @@
-import { extend } from "./../sharde/index";
-import { isObject } from "../sharde";
+import { extend, isObject } from "../shared/index";
 import { tigger, track } from "./effect";
 import { isReadonly, reactive, ReactiveFlas, readonly } from "./reactive";
 

@@ -1,4 +1,4 @@
-import { hasChanged, isObject } from "../sharde";
+import { hasChanged, isObject } from "../shared/index";
 import { tiggerEffect, trackEffect, isTracking } from "./effect";
 import { reactive } from "./reactive";
 

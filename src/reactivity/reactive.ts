@@ -1,3 +1,4 @@
+import { isObject } from "../shared/index";
 import {
   mutableHanlders,
   readonlyHanlders,
@@ -10,20 +11,26 @@ export const enum ReactiveFlas {
 }
 
 export function reactive(raw) {
-  return createActiveObject(raw, mutableHanlders);
+  return createReactiveObject(raw, mutableHanlders);
 }
 
 export function readonly(raw) {
-  return createActiveObject(raw, readonlyHanlders);
+  return createReactiveObject(raw, readonlyHanlders);
 }
 
 export function shallowReadonly(raw) {
-  return createActiveObject(raw, shallowOnlyHandlers);
+  return createReactiveObject(raw, shallowOnlyHandlers);
 }
 
 ///////////////////////////////////////////////////////////////////
-function createActiveObject(raw: any, baseHandler) {
-  return new Proxy(raw, baseHandler);
+function createReactiveObject(target: any, baseHandler) {
+
+  if (!isObject(target)) {
+    console.warn('target'.concat(target).concat('必须是一个对象'))
+    return
+  }
+
+  return new Proxy(target, baseHandler);
 }
 
 export function isReactive(value) {

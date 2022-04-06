@@ -1,4 +1,5 @@
-import { isObject } from "../sharde/index";
+import { isObject } from "../shared/index";
+import { shapeFlags } from "../shared/SharpeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 
 export function render(vnode, container) {
@@ -6,12 +7,16 @@ export function render(vnode, container) {
 }
 
 export function patch(vnode, container) {
+  // shapeFlags
   // debugger;
   // 分析组件，将组件强化后输出
   // 区分 Components 类型与 Element 类型
-  if (typeof vnode.type === 'string') {
+
+  const { shapeFlag } = vnode;
+
+  if (shapeFlag & shapeFlags.ELEMENT) {
     processElement(vnode, container)
-  } else if (isObject(vnode)) {
+  } else if (shapeFlag & shapeFlags.STATEFUL_COMPONENT) {
     processComponent(vnode, container)
   }
 }
@@ -21,18 +26,24 @@ function processElement(vnode, container) {
 }
 
 function mountElement(vnode, container) {
-  const { children, props } = vnode
+  const { children, shapeFlag, props } = vnode
   const el = (vnode.el = document.createElement(vnode.type));
   // // string array
-  if (typeof children === 'string') {
+  if (shapeFlag & shapeFlags.TEXT_CHILDREN) {
     el.textContent = children; // 'hi mini vue';
-  } else if (Array.isArray(children)) {
+  } else if (shapeFlags.ARRAY_CHILDREN) {
     mountChildren(vnode, el)
   }
 
+  const isOn = (key: string) => /^on[A-Z]/.test(key);
+
   for (const key in props) {
-    if (Object.prototype.hasOwnProperty.call(props, key)) {
-      const val = props[key];
+    const val = props[key];
+
+    if (isOn(key)) {
+      const event = key.slice(2).toLowerCase();
+      el.addEventListener(event, val)
+    } else {
       el.setAttribute(key, val)
     }
   }

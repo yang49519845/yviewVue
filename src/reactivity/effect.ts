@@ -1,4 +1,4 @@
-import { extend } from "../sharde";
+import { extend } from "../shared/index";
 let activeEffect;
 let shouldTrack;
 export class ReactiveEffect {
