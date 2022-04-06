@@ -1,8 +1,12 @@
+import { publicINstanceProxyHandlers } from "./componentPublicInstance";
+import { createVNode } from "./vnode";
+
 export function createComponentInstance(vnode) {
 
   const component = {
     vnode,
-    type: vnode.type
+    type: vnode.type,
+    setupState: {},
   }
 
   return component;
@@ -18,9 +22,12 @@ export function setupComponent(instance) {
 }
 
 
-function setupStatefulComponent(instance) {
+function setupStatefulComponent(instance: any) {
 
-  const Component = instance.vnode.type;
+  const Component = instance.type;
+
+  // ctx
+  instance.proxy = new Proxy({ _: instance }, publicINstanceProxyHandlers)
 
   const { setup } = Component;
 
@@ -38,7 +45,7 @@ function setupStatefulComponent(instance) {
 function handleSetupResult(instance: any, setupResult: any) {
 
   if (typeof setupResult === 'object') {
-    instance.setup = setupResult;
+    instance.setupState = setupResult;
   }
 
   finishComponentSetup(instance);
@@ -47,6 +54,5 @@ function handleSetupResult(instance: any, setupResult: any) {
 function finishComponentSetup(instance: any) {
   const Component = instance.type;
   // TODO: 1.0.0 必须写Render
-
   instance.render = Component.render
 }

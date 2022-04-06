@@ -22,7 +22,7 @@ function processElement(vnode, container) {
 
 function mountElement(vnode, container) {
   const { children, props } = vnode
-  const el = document.createElement(vnode.type);
+  const el = (vnode.el = document.createElement(vnode.type));
   // // string array
   if (typeof children === 'string') {
     el.textContent = children; // 'hi mini vue';
@@ -50,20 +50,23 @@ function processComponent(vnode, container) {
   mountComponent(vnode, container)
 }
 
-function mountComponent(vnode: any, container: any) {
-  const instance = createComponentInstance(vnode);
+function mountComponent(initialVNode: any, container: any) {
+  const instance = createComponentInstance(initialVNode);
 
   setupComponent(instance)
-  setupRenderEffect(instance, container);
+  setupRenderEffect(instance, initialVNode, container);
 }
 
 
-function setupRenderEffect(instance: any, container: any) {
+function setupRenderEffect(instance: any, initialVNode, container: any) {
+  const { proxy } = instance;
   // vnode Tree
-  const subTree = instance.render();
+  const subTree = instance.render.call(proxy);
 
   // vnode -> patch
-  //  vnode -> element -> mountElement -> dom
+  // vnode -> element -> mountElement -> dom
   patch(subTree, container)
 
+  // element -> mounted
+  initialVNode.el = subTree.el
 }
