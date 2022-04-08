@@ -1,7 +1,7 @@
 import { shallowReadonly } from "../reactivity/reactive";
 import { emit } from "./componentEmit";
 import { initProps } from "./componentProps";
-import { publicINstanceProxyHandlers } from "./componentPublicInstance";
+import { publicInstanceProxyHandlers } from "./componentPublicInstance";
 
 export function createComponentInstance(vnode) {
 
@@ -33,7 +33,7 @@ function setupStatefulComponent(instance: any) {
   const Component = instance.type;
 
   // ctx
-  instance.proxy = new Proxy({ _: instance }, publicINstanceProxyHandlers)
+  instance.proxy = new Proxy({ _: instance }, publicInstanceProxyHandlers)
 
   const { setup } = Component;
 

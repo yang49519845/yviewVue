@@ -4,7 +4,7 @@ const publicPropertiesMap = {
   $el: (i) => i.vnode.el
 }
 
-export const publicINstanceProxyHandlers = {
+export const publicInstanceProxyHandlers = {
   get({ _: instance }, key) {
     const { setupState, props } = instance
 
