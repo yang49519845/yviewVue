@@ -1,5 +1,6 @@
 import {
-  h
+  h,
+  renderSlots
 } from "../../lib/guide-mini-vue.esm.js"
 
 export const Foo = {
@@ -8,8 +9,9 @@ export const Foo = {
     return {}
   },
   render() {
-    const foo = h('p', {}, 'foo');
+    const foo = h('p', {}, 'foo-init component conent');
 
-    return h('div', {}, [foo, this.$slots])
+    // this.$slots
+    return h('div', {}, [foo, renderSlots(this.$slots)])
   }
 }
