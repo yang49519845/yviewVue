@@ -10,8 +10,15 @@ export const Foo = {
   },
   render() {
     const foo = h('p', {}, 'foo-init component conent');
+    const age = 18;
 
     // this.$slots
-    return h('div', {}, [foo, renderSlots(this.$slots)])
+    return h('div', {}, [
+      renderSlots(this.$slots, 'header', {
+        age
+      }),
+      foo,
+      renderSlots(this.$slots, 'footer'),
+    ])
   }
 }
