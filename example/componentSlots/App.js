@@ -1,5 +1,6 @@
 import {
-  h
+  h,
+  createTextNode
 } from "../../lib/guide-mini-vue.esm.js"
 import {
   Foo
@@ -79,48 +80,20 @@ export const App = {
      *  </div>
      * </template>
      */
+    // const foo = h(Foo, {}, {
+    //   header: ({
+    //     age
+    //   }) => h('p', {}, 'header' + age),
+    //   footer: () => h('p', {}, 'footer'),
+    // });
+
     const foo = h(Foo, {}, {
       header: ({
         age
-      }) => h('p', {}, 'header' + age),
+      }) => [h('p', {}, 'header' + age), createTextNode('你好')],
       footer: () => h('p', {}, 'footer'),
     });
-    /**
-     * // 场景 1
-     * <template name="App">
-     *  <div>
-     *    <Foo>
-     *       <p>123</p>
-     *    </Foo>
-     *  </div>
-     * </template>
-     * 
-     * // 情景2
-     * <template name="App">
-     *  <div>
-     *    <Foo>
-     *       <p>123</p>
-     *       <p>123</p>
-     *       <p>123</p>
-     *    </Foo>
-     *  </div>
-     * </template>
-     * 
-     * // 情景3
-     * <template name="App">
-     *  <div>
-     *    <Foo>
-     *      <template #header>
-     *        <p>header</p>
-     *      </template>
-     *       <p>123</p>
-     *      <template #footer>
-     *        <p>footer</p>
-     *      </template>
-     *    </Foo>
-     *  </div>
-     * </template>
-     *  */
+
     return h('div', {}, [app, foo])
   }
 }
