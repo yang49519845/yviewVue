@@ -13,8 +13,6 @@ export const App = {
     }
   },
   render() {
-
-
     const app = h('div', {}, 'App init content');
     /**
      * 场景 1
@@ -86,7 +84,9 @@ export const App = {
     //   }) => h('p', {}, 'header' + age),
     //   footer: () => h('p', {}, 'footer'),
     // });
-
+    /**
+     * Slot 放入 Fragment 元素，与 textNode元素
+     */
     const foo = h(Foo, {}, {
       header: ({
         age
