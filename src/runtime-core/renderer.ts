@@ -1,4 +1,3 @@
-import { isObject } from "../shared/index";
 import { shapeFlags } from "../shared/SharpeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 import { Fragment, Text } from "./vnode";
@@ -36,13 +35,16 @@ function processText(vnode, container) {
   container.append(textNode)
 }
 
-
 function processFragment(vnode, container) {
   mountChildren(vnode, container)
 }
 
 function processElement(vnode, container) {
   mountElement(vnode, container)
+}
+
+function processComponent(vnode, container) {
+  mountComponent(vnode, container)
 }
 
 function mountElement(vnode, container) {
@@ -75,10 +77,6 @@ function mountChildren(vnode, container) {
   vnode.children.forEach(v => {
     patch(v, container)
   })
-}
-
-function processComponent(vnode, container) {
-  mountComponent(vnode, container)
 }
 
 function mountComponent(initialVNode: any, container: any) {
