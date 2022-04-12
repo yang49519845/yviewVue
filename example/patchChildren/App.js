@@ -1,13 +1,25 @@
 import {
   h,
-  ref
+  ref,
+  reactive
 } from "../../lib/guide-mini-vue.esm.js"
 
 import ArrayToText from './ArrayToText.js'
 
 export const App = {
   name: 'App',
-  setup() {},
+  setup() {
+    const userState = reactive({
+      name: 'Spider Man 🕷',
+      age: 18,
+      sex: 1,
+      departments: ['公司', '以部门']
+    })
+
+    return {
+      userState
+    }
+  },
   render() {
     return h('div', {
       id: 'root',

@@ -1,5 +1,6 @@
 import {
-  h
+  h,
+  ref
 } from '../../lib/guide-mini-vue.esm.js'
 import {
   Foo
@@ -16,6 +17,7 @@ export const App = {
       'div', {
         id: 'root',
         class: ['red', 'hard'],
+        onClick: this.onClick
       },
       [
         h('div', {
@@ -47,7 +49,21 @@ export const App = {
     ); // --> <template> <div>hello, {{msg}}</div> </template>
   },
   setup() {
+
+    const userState = ref({
+      name: 'Spider Man 🕷',
+      age: 18,
+      sex: 1,
+      departments: ['公司', '以部门']
+    })
+
+    const onClick = () => {
+      console.log(userState.value.age = 19)
+    }
+
     return {
+      userState,
+      onClick,
       msg: 'vue view'
     }
   }

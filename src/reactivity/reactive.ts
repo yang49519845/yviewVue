@@ -5,12 +5,13 @@ import {
   shallowOnlyHandlers,
 } from "./baseHandler";
 
-export const enum ReactiveFlas {
+export const enum ReactiveFlags {
   IS_REACTIVE = "__v_isReactive",
   IS_READONLY = "__v_isReadonly",
 }
 
 export function reactive(raw) {
+  console.log('传入的参数', raw)
   return createReactiveObject(raw, mutableHanlders);
 }
 
@@ -22,9 +23,8 @@ export function shallowReadonly(raw) {
   return createReactiveObject(raw, shallowOnlyHandlers);
 }
 
-///////////////////////////////////////////////////////////////////
+/////////////////////////////////创建响应式对象开始/////////////////////////////////
 function createReactiveObject(target: any, baseHandler) {
-
   if (!isObject(target)) {
     console.warn('target'.concat(target).concat('必须是一个对象'))
     return
@@ -34,11 +34,11 @@ function createReactiveObject(target: any, baseHandler) {
 }
 
 export function isReactive(value) {
-  return !!value[ReactiveFlas.IS_REACTIVE];
+  return !!value[ReactiveFlags.IS_REACTIVE];
 }
 
 export function isReadonly(value) {
-  return !!value[ReactiveFlas.IS_READONLY];
+  return !!value[ReactiveFlags.IS_READONLY];
 }
 
 export function isProxy(value) {
