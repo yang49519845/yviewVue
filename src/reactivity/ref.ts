@@ -1,5 +1,5 @@
 import { hasChanged, isObject } from "../shared/index";
-import { tiggerEffect, trackEffect, isTracking } from "./effect";
+import { triggerEffect, trackEffect, isTracking } from "./effect";
 import { reactive } from "./reactive";
 
 class ResImpl {
@@ -23,7 +23,7 @@ class ResImpl {
     if (!hasChanged(newValue, this._rawValue)) return;
     this._rawValue = newValue;
     this._value = convert(newValue);
-    tiggerEffect(this.dep);
+    triggerEffect(this.dep);
   }
 }
 
