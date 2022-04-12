@@ -3,6 +3,7 @@ import { shapeFlags } from "../shared/SharpeFlags";
 import { Fragment, Text } from "./vnode";
 import { createComponentInstance, setupComponent } from "./component";
 import { effect } from "../reactivity";
+import { EMPTY_OBJ } from "../shared";
 
 // 使用闭包进行封装
 export function createRender(options) {
@@ -56,6 +57,39 @@ export function createRender(options) {
 
   function patchElement(n1, n2, container) {
     console.log(n1, n2)
+
+    const oldProps = n1.props || EMPTY_OBJ;
+    const newProps = n2.props || EMPTY_OBJ;
+
+    const el = (n2.el = n1.el)
+
+    patchProps(el, oldProps, newProps)
+  }
+
+
+
+  function patchProps(el, oldProps: any, newProps: any) {
+
+    if (oldProps !== newProps) {
+      for (const key in newProps) {
+        if (Object.prototype.hasOwnProperty.call(newProps, key)) {
+          const prevProps = oldProps[key];
+          const nextProps = newProps[key];
+
+          if (prevProps !== nextProps) {
+            hostPatchProp(el, key, prevProps, nextProps)
+          }
+        }
+      }
+
+      if (oldProps !== EMPTY_OBJ) {
+        for (const key in oldProps) {
+          if (!(key in newProps)) {
+            hostPatchProp(el, key, oldProps[key], null)
+          }
+        }
+      }
+    }
   }
 
   function processComponent(n1, n2, container, parentComponent) {
@@ -79,7 +113,7 @@ export function createRender(options) {
     for (const key in props) {
       const val = props[key];
 
-      hostPatchProp(el, key, val)
+      hostPatchProp(el, key, null, val)
     }
 
     hostInsert(el, container);
@@ -126,3 +160,5 @@ export function createRender(options) {
     createApp: createAppAPI(render)
   }
 }
+
+

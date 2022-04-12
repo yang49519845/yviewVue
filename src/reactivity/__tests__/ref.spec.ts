@@ -44,6 +44,24 @@ describe("ref", () => {
     expect(dummy).toBe(2);
   });
 
+
+
+  it("Object Value Change", () => {
+    const a = ref({
+      foo: 'foo',
+      bar: 'bar'
+    });
+
+    let dummy;
+    effect(() => {
+      dummy = a.value.foo
+    });
+
+    expect(dummy).toBe('foo');
+    a.value.foo = 'new-foo';
+    expect(dummy).toBe('new-foo');
+  });
+
   // isRef  unRef
   it("isRef", () => {
     const a = ref(1);

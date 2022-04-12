@@ -61,7 +61,7 @@ export function track(target, key) {
 }
 
 export function trackEffect(dep) {
-  console.log('收集依赖')
+  // console.log('收集依赖')
   if (dep.has(activeEffect)) return;
 
   dep.add(activeEffect);
@@ -81,7 +81,7 @@ export function tigger(target, key) {
 }
 
 export function triggerEffect(dep) {
-  console.log('触发依赖')
+  // console.log('触发依赖')
   for (const effect of dep) {
     if (effect.scheduler) {
       effect.scheduler();
