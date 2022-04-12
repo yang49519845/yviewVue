@@ -6,7 +6,7 @@ import { createComponentInstance, setupComponent } from "./component";
 // 使用闭包进行封装
 export function createRender(options) {
 
-  const { createElement, patchProp, insert } = options;
+  const { createElement: hostCreateElement, patchProp: hostPatchProp, insert: hostInsert } = options;
 
   function render(vnode, container) {
     patch(vnode, container, null);
@@ -60,7 +60,7 @@ export function createRender(options) {
     // Canvas -> new Element() -> setProps -> append
     const { children, shapeFlag, props } = vnode
     // const el = (vnode.el = document.createElement(vnode.type));
-    const el = (vnode.el = createElement(vnode.type));
+    const el = (vnode.el = hostCreateElement(vnode.type));
     // // string array
     if (shapeFlag & shapeFlags.TEXT_CHILDREN) {
       el.textContent = children; // 'hi mini vue';
@@ -78,15 +78,15 @@ export function createRender(options) {
       // } else {
       //   el.setAttribute(key, val)
       // }
-      patchProp(el, key, val)
+      hostPatchProp(el, key, val)
     }
 
     // container.append(el)
-    insert(el, container);
+    hostInsert(el, container);
   }
 
   function mountChildren(vnode, container, parentComponent) {
-    vnode.children.forEach(v => {
+    vnode.children?.forEach(v => {
       patch(v, container, parentComponent)
     })
   }
