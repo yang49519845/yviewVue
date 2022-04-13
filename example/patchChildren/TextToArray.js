@@ -3,14 +3,10 @@ import {
   ref
 } from "../../lib/guide-mini-vue.esm.js";
 
-const nextChildren = 'newChildren';
-const prevChildren = [
-  h('div', {
-    class: 'child-component'
-  }, "A"),
-  h('div', {
-    class: 'child-component'
-  }, "B")
+const prevChildren = 'newChildren';
+const nextChildren = [
+  h('div', {}, "A"),
+  h('div', {}, "B")
 ]
 
 export default {

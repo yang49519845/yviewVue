@@ -5,12 +5,8 @@ import {
 
 const nextChildren = 'newChildren';
 const prevChildren = [
-  h('div', {
-    class: 'child-component'
-  }, "A"),
-  h('div', {
-    class: 'child-component'
-  }, "B")
+  h('div', {}, "A"),
+  h('div', {}, "B")
 ]
 
 export default {

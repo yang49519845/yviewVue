@@ -3,15 +3,8 @@ import {
   ref
 } from "../../lib/guide-mini-vue.esm.js";
 
+const prevChildren = 'oldChildren'
 const nextChildren = 'newChildren';
-const prevChildren = [
-  h('div', {
-    class: 'child-component'
-  }, "A"),
-  h('div', {
-    class: 'child-component'
-  }, "B")
-]
 
 export default {
   name: 'ArrayToText',
