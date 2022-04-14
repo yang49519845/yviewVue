@@ -11,7 +11,7 @@ import ArrayToArray from './ArrayToArray.js'
 
 export const App = {
   name: 'App',
-  setup() {},
+  setup() { },
   render() {
     return h('div', {
       tId: 1,
@@ -23,9 +23,9 @@ export const App = {
       // text  --> text
       // h(TextToText),
       // text  --> array
-      h(TextToArray),
+      // h(TextToArray),
       // array --> array
-      // h(ArrayToArray),
+      h(ArrayToArray),
     ])
   }
 }
