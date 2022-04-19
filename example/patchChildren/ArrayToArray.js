@@ -36,16 +36,16 @@ import {
 // 左侧对比
 // (a b) c
 // (a b)
-const prevChildren = [
-  h('div', { key: 'A', }, 'A'),
-  h('div', { key: 'B', }, 'B'),
-]
-const nextChildren = [
-  h('div', { key: 'D', }, 'D'),
-  h('div', { key: 'C', }, 'C'),
-  h('div', { key: 'A', }, 'A'),
-  h('div', { key: 'B', }, 'B'),
-]
+// const prevChildren = [
+//   h('div', { key: 'A', }, 'A'),
+//   h('div', { key: 'B', }, 'B'),
+// ]
+// const nextChildren = [
+//   h('div', { key: 'D', }, 'D'),
+//   h('div', { key: 'C', }, 'C'),
+//   h('div', { key: 'A', }, 'A'),
+//   h('div', { key: 'B', }, 'B'),
+// ]
 
 // 右侧对比
 // a (b c)
@@ -60,6 +60,41 @@ const nextChildren = [
 //   h('div', { key: 'C', }, 'C'),
 // ]
 
+
+// const prevChildren = [
+//   h('div', { key: 'A', }, 'A'),
+//   h('div', { key: 'B', }, 'B'),
+//   h('div', { key: 'C', }, 'C'),
+//   h('div', { key: 'D', }, 'D'),
+//   h('div', { key: 'F', }, 'F'),
+//   h('div', { key: 'G', }, 'G'),
+// ]
+// const nextChildren = [
+//   h('div', { key: 'A', }, 'A'),
+//   h('div', { key: 'B', }, 'B'),
+//   h('div', { key: 'E', }, 'E'),
+//   h('div', { key: 'C', nextChild: 'CC' }, 'C'),
+//   h('div', { key: 'F', }, 'F'),
+//   h('div', { key: 'G', }, 'G'),
+// ]
+
+const prevChildren = [
+  h('div', { key: 'A', }, 'A'),
+  h('div', { key: 'B', }, 'B'),
+  h('div', { key: 'C', }, 'C'),
+  h('div', { key: 'E', }, 'E'),
+  h('div', { key: 'D', }, 'D'),
+  h('div', { key: 'F', }, 'F'),
+  h('div', { key: 'G', }, 'G'),
+]
+const nextChildren = [
+  h('div', { key: 'A', }, 'A'),
+  h('div', { key: 'B', }, 'B'),
+  h('div', { key: 'E', }, 'E'),
+  h('div', { key: 'C', nextChild: 'CC' }, 'C'),
+  h('div', { key: 'F', }, 'F'),
+  h('div', { key: 'G', }, 'G'),
+]
 
 export default {
   name: 'ArrayToText',
