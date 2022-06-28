@@ -5,6 +5,7 @@ import { createComponentInstance, setupComponent } from "./component";
 import { effect } from "../reactivity";
 import { EMPTY_OBJ } from "../shared";
 import { shouldUpdateComponent } from './componentUpdateUtils'
+import { queueJobs } from "./scheduler";
 
 // 使用闭包进行封装
 export function createRender(options) {
@@ -360,6 +361,11 @@ export function createRender(options) {
         instance.subTree = subTree;
 
         patch(prevSubTree, subTree, container, instance, anchor)
+      }
+    }, {
+      scheduler() {
+        console.log('update - scheduler')
+        queueJobs(instance.update)
       }
     })
   }
