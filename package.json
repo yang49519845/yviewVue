@@ -2,6 +2,7 @@
   "name": "view-vue",
   "version": "1.0.0",
   "description": "",
+  "packageManager": "pnpm",
   "main": "lib/guide-mini-vue.cjs.js",
   "module": "lib/guide-mini-vue.esm.js",
   "scripts": {
