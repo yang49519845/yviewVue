@@ -26,4 +26,15 @@ describe('happy path', () => {
       })
     })
   })
+
+  describe('text', () => {
+    test('simple text', () => {
+      const ast = baseParse("foo")
+
+      expect(ast.children[0]).toStrictEqual({
+        type: NodeTypes.TEXT,
+        content: 'foo'
+      })
+    })
+  })
 })

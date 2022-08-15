@@ -10,6 +10,36 @@ export function baseParse(content: string) {
   return createRoot(parserChildren(context));
 }
 
+function createRoot(children) {
+  return {
+    children
+  }
+}
+
+/**
+ * 更新未解析的模板内容，大致过程如下
+ * 
+ * 模板内容 <div>hi, {{ message }}</div>
+ * 
+ * 
+ *
+ * @param {*} context
+ * @param {number} length
+ */
+function advanceBy(context: any, length: number) {
+
+  console.log(context.source)
+
+  context.source = context.source.slice(length);
+}
+
+
+/**
+ * 解析模板入口
+ *
+ * @param {*} context
+ * @return {*} 
+ */
 function parserChildren(context) {
   const nodes: any = [];
   let node;
@@ -17,10 +47,13 @@ function parserChildren(context) {
     node = parserInterPolation(context);
   } else if (context.source[0] === '<') {
     if (/[a-z]/i.test(context.source[1])) {
-      console.log('parse element')
 
       node = parserElement(context)
     }
+  }
+
+  if(!node) {
+    node = parseText(context)
   }
 
   nodes.push(node);
@@ -28,6 +61,13 @@ function parserChildren(context) {
   return nodes
 }
 
+
+/**
+ * 解析数据节点
+ *
+ * @param {*} context
+ * @return {*} 
+ */
 function parserInterPolation(context) {
   const openDelimiter = "{{";
   const closeDelimiter = "}}";
@@ -36,7 +76,7 @@ function parserInterPolation(context) {
   advanceBy(context, openDelimiter.length)
 
   const rawContentLength = closeIndex - openDelimiter.length;
-  const rawContent = context.source.slice(0, rawContentLength);
+  const rawContent = parseTextData(context, rawContentLength)
   const content = rawContent.trim()
   advanceBy(context, rawContentLength + closeDelimiter.length)
 
@@ -49,27 +89,27 @@ function parserInterPolation(context) {
   }
 }
 
+/**
+ * 将数据格式化后统一处理
+ *
+ * @param {string} content
+ * @return { source: string }
+ */
 function createParserContext(content: string) {
   return {
     source: content
   }
 }
 
-function createRoot(children) {
-  return {
-    children
-  }
-}
-
-function advanceBy(context: any, length: number) {
-  context.source = context.source.slice(length);
-}
-
+/**
+ * 解析DOM
+ *
+ * @param {*} context
+ * @return {*} 
+ */
 function parserElement(context: any) {
   const tag = parserTag(context, TagType.Start);
   parserTag(context, TagType.End);
-
-  console.log(context.source)
 
   return {
     type: NodeTypes.ELEMENT,
@@ -90,4 +130,36 @@ function parserTag(context: any, type: TagType) {
   return tag;
 
 }
+
+/**
+ * 解析Text节点
+ *
+ * @param {*} context
+ * @return {*} 
+ */
+function parseText(context: any) {
+  const content = parseTextData(context, context.source.length)
+  
+  return {
+    type: NodeTypes.TEXT,
+    content
+  }
+}
+
+
+/**
+ * 获取文本信息，推进解析长度
+ *
+ * @param {*} context
+ * @param {*} length
+ * @return {*} 
+ */
+function parseTextData(context, length) {
+  const content = context.source.slice(0, length);
+
+  advanceBy(context, length)
+
+  return content
+}
+
 
