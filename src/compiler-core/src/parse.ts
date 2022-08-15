@@ -7,7 +7,19 @@ const enum TagType {
 export function baseParse(content: string) {
   const context = createParserContext(content);
 
-  return createRoot(parserChildren(context));
+  return createRoot(parserChildren(context, []));
+}
+
+/**
+ * 将数据格式化后统一处理
+ *
+ * @param {string} content
+ * @return { source: string }
+ */
+function createParserContext(content: string) {
+  return {
+    source: content
+  }
 }
 
 function createRoot(children) {
@@ -27,12 +39,8 @@ function createRoot(children) {
  * @param {number} length
  */
 function advanceBy(context: any, length: number) {
-
-  console.log(context.source)
-
   context.source = context.source.slice(length);
 }
-
 
 /**
  * 解析模板入口
@@ -40,27 +48,47 @@ function advanceBy(context: any, length: number) {
  * @param {*} context
  * @return {*} 
  */
-function parserChildren(context) {
+function parserChildren(context, ancestors) {
   const nodes: any = [];
-  let node;
-  if (context.source.startsWith('{{')) {
-    node = parserInterPolation(context);
-  } else if (context.source[0] === '<') {
-    if (/[a-z]/i.test(context.source[1])) {
+  while (!isEnd(context, ancestors)) {
+    let node;
+    const s = context.source;
 
-      node = parserElement(context)
+    if (s.startsWith('{{')) {
+      node = parserInterPolation(context);
+    } else if (s[0] === '<' && /[a-z]/i.test(s[1])) {
+      node = parserElement(context, ancestors)
     }
-  }
 
-  if(!node) {
-    node = parseText(context)
-  }
+    if (!node) {
+      node = parseText(context)
+    }
 
-  nodes.push(node);
+    nodes.push(node);
+  }
 
   return nodes
 }
 
+function isEnd(context, ancestors) {
+  // 1. 存在结束标签
+  const s = context.source
+
+  if (s.startsWith("</")) {
+    for (let i = ancestors.length -1; i >= 0 ; i--) {
+      const tag = ancestors[i].tag
+      if (startsWithEndTagOpen(s, tag)) {
+        return true
+      }
+    }
+  }
+  // if (parentTag && s.startsWith(`</${parentTag}>`)) {
+  //   return true
+  // }
+  // 2. source有值
+  return !s
+
+}
 
 /**
  * 解析数据节点
@@ -78,8 +106,7 @@ function parserInterPolation(context) {
   const rawContentLength = closeIndex - openDelimiter.length;
   const rawContent = parseTextData(context, rawContentLength)
   const content = rawContent.trim()
-  advanceBy(context, rawContentLength + closeDelimiter.length)
-
+  advanceBy(context, closeDelimiter.length)
   return {
     type: NodeTypes.INTERPOLATION, // 'interpolation',
     content: {
@@ -90,31 +117,26 @@ function parserInterPolation(context) {
 }
 
 /**
- * 将数据格式化后统一处理
- *
- * @param {string} content
- * @return { source: string }
- */
-function createParserContext(content: string) {
-  return {
-    source: content
-  }
-}
-
-/**
  * 解析DOM
  *
  * @param {*} context
  * @return {*} 
  */
-function parserElement(context: any) {
-  const tag = parserTag(context, TagType.Start);
-  parserTag(context, TagType.End);
-
-  return {
-    type: NodeTypes.ELEMENT,
-    tag
+function parserElement(context: any, ancestors) {
+  const element: any = parserTag(context, TagType.Start);
+  ancestors.push(element);
+  element.children = parserChildren(context, ancestors);
+  ancestors.pop();
+  if (startsWithEndTagOpen(context.source, element.tag)) {
+    parserTag(context, TagType.End);
+  } else {
+    throw new Error(`缺少Element close code`)
   }
+  return element;
+}
+
+function startsWithEndTagOpen(source, tag) {
+  return source.startsWith('</') && source.slice(2, 2 + tag.length).toLowerCase() === tag.toLowerCase()
 }
 
 function parserTag(context: any, type: TagType) {
@@ -127,8 +149,10 @@ function parserTag(context: any, type: TagType) {
 
   if (type === TagType.End) return
 
-  return tag;
-
+  return {
+    type: NodeTypes.ELEMENT,
+    tag
+  };
 }
 
 /**
@@ -138,8 +162,21 @@ function parserTag(context: any, type: TagType) {
  * @return {*} 
  */
 function parseText(context: any) {
-  const content = parseTextData(context, context.source.length)
-  
+  let endIndex = context.source.length;
+  let endToken = ["{{", "<"];
+
+  for (let i = 0; i < endToken.length; i++) {
+    const index = context.source.indexOf(endToken[i]);
+    if (index !== -1 && endIndex > index) {
+
+      endIndex = index
+    }
+  }
+
+
+
+  const content = parseTextData(context, endIndex);
+
   return {
     type: NodeTypes.TEXT,
     content
@@ -148,7 +185,7 @@ function parseText(context: any) {
 
 
 /**
- * 获取文本信息，推进解析长度
+ * 获取文本信息，推进解π析长度
  *
  * @param {*} context
  * @param {*} length
