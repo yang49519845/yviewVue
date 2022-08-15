@@ -113,5 +113,4 @@ describe('happy path', () => {
       baseParse('<div><span></div>')
     }).toThrow(`缺少Element close code`);
   })
-
 })
